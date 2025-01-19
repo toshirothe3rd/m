@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'meditai.railway.internal',
+    'meditai.up.railway.app',
     'localhost',
     '127.0.0.1',
 ]
@@ -49,13 +49,13 @@ if DEBUG:
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
-        'https://meditai.railway.internal'
+        'https://meditai.up.railway.app'
     ]
     CSRF_TRUSTED_ORIGINS = [
-        'https://meditai.railway.internalp'
+        'https://meditai.up.railway.app'
     ]
     CORS_ORIGIN_WHITELIST = [
-        'https://meditai.railway.internal'
+        'https://meditai.up.railway.app'
     ]
 
 
