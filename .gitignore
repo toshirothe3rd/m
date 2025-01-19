@@ -37,3 +37,5 @@ ehthumbs.db
 Thumbs.db
 
 .env
+new_id_rsa.pub
+new_id_rsa
