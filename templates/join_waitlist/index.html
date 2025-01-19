@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medit AI - AI-Powered Medical Article Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            height: 100%;
+            margin: 0;
+        }
+        .highlight {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .highlight:hover {
+            font-weight: bold;
+        }
+        .highlight::after {
+            content: attr(data-comment);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .highlight:hover::after {
+            opacity: 1;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-blue-600">Medit AI</a>
+                <ul id="nav-links" class="hidden md:flex space-x-6">
+                    <li><a href="#features" class="hover:text-blue-600 transition-colors">Features</a></li>
+                    <li><a href="#how-it-works" class="hover:text-blue-600 transition-colors">How It Works</a></li>
+                    <li><a href="#demo" class="hover:text-blue-600 transition-colors">Demo</a></li>
+                    <li><a href="#pricing" class="hover:text-blue-600 transition-colors">Pricing</a></li>
+                    <li><a href="#contact" class="hover:text-blue-600 transition-colors">Contact</a></li>
+                </ul>
+                <div class="flex space-x-4 items-center">
+                    <!-- <button class="hidden md:block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 transition-colors">Login</button> -->
+                    <button id="menu-toggle" class="md:hidden focus:outline-none" aria-label="Toggle menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-nav" class="md:hidden bg-white px-6 py-4 shadow-md mt-4 hidden">
+            <ul class="space-y-4">
+                <li><a href="#features" class="block hover:text-blue-600 transition-colors">Features</a></li>
+                <li><a href="#how-it-works" class="block hover:text-blue-600 transition-colors">How It Works</a></li>
+                <li><a href="#demo" class="block hover:text-blue-600 transition-colors">Demo</a></li>
+                <li><a href="#pricing" class="block hover:text-blue-600 transition-colors">Pricing</a></li>
+                <li><a href="#contact" class="block hover:text-blue-600 transition-colors">Contact</a></li>
+                <!-- <li><button class="w-full text-left bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 transition-colors">Login</button></li> -->
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Revolutionize Your <span class="underline decoration-white">Medical Writing</span></h1>
+                <p class="text-lg md:text-xl mb-6">AI-powered editing and analysis for medical articles and research papers</p>
+                <div class="flex justify-center space-x-4">
+                    <button id="open-modal" class="bg-white text-blue-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
+                        Join Waitlist
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Key Features</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold mb-2">Grammar Correction</h3>
+                        <p class="text-gray-600">Advanced AI algorithms to fix grammatical errors</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold mb-2">Context-Aware Edits</h3>
+                        <p class="text-gray-600">Identify and replace unsuitable words in medical context</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold mb-2">Inline Comments</h3>
+                        <p class="text-gray-600">Detailed explanations for suggested changes</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold mb-2">Highlighted Edits</h3>
+                        <p class="text-gray-600">Easily identify and review all changes made</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">1</div>
+                        <h3 class="text-xl font-semibold mb-2">Upload Your Article</h3>
+                        <p class="text-gray-600">Submit your medical article or research paper for analysis.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">2</div>
+                        <h3 class="text-xl font-semibold mb-2">AI Analysis</h3>
+                        <p class="text-gray-600">Our AI processes your document, identifying areas for improvement.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">3</div>
+                        <h3 class="text-xl font-semibold mb-2">Review and Apply Changes</h3>
+                        <p class="text-gray-600">Review AI-suggested edits and comments, then apply or modify as needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-6">See Medit AI in Action</h2>
+        <p class="text-center text-gray-600 mb-12">Experience the power of AI-driven editing that can elevate your medical research to publication standards. Our platform catches errors that even experienced researchers might miss, ensuring your work is polished and precise.</p>
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+            <p class="text-gray-600 mb-4 text-center">Click on highlighted words to see and apply suggestions. Hover over highlighted words for quick comments.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-center">Original Text</h3>
+                    <div id="original-text" class="bg-white p-4 rounded border border-gray-300 mb-4">
+                        <p>In this study, we investigated the eficacy of a novel antibiotic compound, XYZ-123, in treating MRSA infections. The compound demonstrated significant bacteriocidal activity against MRSA strains in vitro and in vivo. A cohort of 150 patients with nosocomial MRSA infections were enrolled in a double-blind, randomized controlled trail. Patients recieved either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete erradication of infection, compared to only 78% in the vancomycin group (p<0.001). PK analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. Adverse affects were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. This data suggests that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term safty and efficacy of XYZ-123 in diverse patient populations.</p>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">
+                            Edited Text
+                        </h3>
+                    </div>
+                    
+                    <div id="edited-text" class="bg-white p-4 rounded border border-gray-300 mb-4">
+                        <p>In this study, we investigated the <span class="highlight bg-red-200" data-original="eficacy" data-suggestion="efficacy" data-comment="Spelling: 'efficacy' is the correct term">eficacy</span> of a novel antibiotic compound, XYZ-123, in treating <span class="highlight bg-yellow-200" data-original="MRSA" data-suggestion="Methicillin-Resistant Staphylococcus aureus" data-comment="Terminology: The full meaning of MRSA in this context is Methicillin-Resistant Staphylococcus aureus.">MRSA</span> infections. The compound demonstrated significant <span class="highlight bg-red-200" data-original="bacteriocidal" data-suggestion="bactericidal" data-comment="Spelling: 'bactericidal' is the correct term">bacteriocidal</span> activity against MRSA strains <span class="highlight bg-yellow-200" data-original="in vitro" data-suggestion="<i>in vitro</i>" data-comment="Formatting: Italicize Latin term">in vitro</span> and <span class="highlight bg-yellow-200" data-original="in vivo" data-suggestion="<i>in vivo</i>" data-comment="Formatting: Italicize Latin term">in vivo</span>. A cohort of 150 patients with <span> nosocomial MRSA infections were enrolled in a double-blind, randomized controlled <span class="highlight bg-red-200" data-original="trail" data-suggestion="trial" data-comment="Spelling: 'trial' is the correct term for a study">trail</span>. Patients <span class="highlight bg-red-200" data-original="recieved" data-suggestion="received" data-comment="Spelling: 'received' is the correct spelling">recieved</span> either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete <span class="highlight bg-red-200" data-original="erradication" data-suggestion="eradication" data-comment="Spelling: 'eradication' is the correct spelling">erradication</span> of infection, compared to only 78% in the vancomycin group (p&lt;0.001). <span class="highlight bg-yellow-200" data-original="Pharmacokinetic" data-suggestion="Pharmacokinetic" data-comment="Terminology: The full meaning of PK in this context is Pharmacokinetic">PK</span> analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. <span class="highlight bg-red-200" data-original="Adverse affects" data-suggestion="Adverse effects" data-comment="Terminology: 'effects' is correct in medical context">Adverse affects</span> were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. <span class="highlight bg-yellow-200" data-original="This data suggests" data-suggestion="These data suggest" data-comment="Grammar: 'Data' is plural in scientific writing">This data suggests</span> that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term <span class="highlight bg-red-200" data-original="safty" data-suggestion="safety" data-comment="Spelling: 'safety' is the correct spelling">safty</span> and efficacy of XYZ-123 in diverse patient populations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16">
+                <h2 class="text-xl font-semibold mb-6 text-center underline">Inline Comments</h2>
+                <div id="inline-comments" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-2">Spelling Corrections:</h4>
+                        <ul class="list-disc pl-5 space-y-2" id="spelling-comments"></ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">Terminology and Formatting:</h4>
+                        <ul class="list-disc pl-5 space-y-2" id="terminology-comments"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-11">
+                <h3 class="text-xl font-semibold mb-4">AI-Suggested Improvements:</h3>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Correct spelling errors in medical terminology (e.g., "bacteriocidal" to "bactericidal", "erradication" to "eradication")</li>
+                    <li>Fix general vocabulary and grammar mistakes (e.g., "eficacy" to "efficacy", "recieved" to "received")</li>
+                    <li>Ensure proper formatting of scientific terms (e.g., italicization of "in vitro" and "in vivo")</li>
+                    <li>Improve clarity and precision in reporting research findings (e.g., "This data suggests" to "These data suggest")</li>
+                    <li>Correct usage of medical terms (e.g., "Adverse affects" to "Adverse effects")</li>
+                    <li>Enhance consistency in terminology throughout the text</li>
+                    <li>Provides the full meanings of medical abbreviations, such as PK for Pharmacokinetics, ensuring clear understanding and context.</li>
+                    <li>Recommend additional statistical information for stronger evidence (e.g., confidence intervals)</li>
+                    <li>Propose structural improvements for better flow and readability</li>
+                    <li>Flag potential areas for expanded discussion or clarification</li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-12 bg-blue-50 p-6 rounded-lg shadow-md">
+            <h3 class="text-2xl font-semibold mb-4 text-center text-blue-800">Why Medit AI is Essential for Your Research</h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-900">
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Catches subtle errors that can impact your paper's credibility</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Ensures consistency in medical terminology, abbreviations and phrasing</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Improves the overall quality and readability of your research</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Saves time in the editing process, allowing you to focus on your research</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Increases the likelihood of acceptance in top-tier medical journals</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Provides educational feedback to improve your medical writing skills</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+        <section id="pricing" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4">Pricing</h2>
+                <!-- <p class="text-center text-gray-600 mb-12">Choose a plan that suits your needs</p> -->
+                <div class="flex justify-center">
+                    <div class="bg-white p-8 rounded-lg shadow-md text-center transition-transform hover:scale-105">
+                        <!-- <h3 class="text-2xl font-bold mb-4">Pro</h3>
+                        <p class="text-gray-600 mb-4">For research teams</p> -->
+                        <p class="text-3xl font-bold mb-6">₦10,000<span class="text-lg font-normal">/month</span></p>
+                        <ul class="text-gray-600 space-y-2 mb-8">
+                            <li>Up to 20 articles per month</li>
+                            <li>Advanced grammar correction</li>
+                            <li>Context-aware medical terminology check</li>
+                            <li>Inline comments and suggestions</li>
+                            <li>Customizable terminology database</li>
+                        </ul>
+                        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition-colors inline-block waitlist-button">Join Waitlist</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta" class="bg-blue-600 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-bold mb-4">Be the First to Experience Medit AI</h2>
+                <p class="text-xl mb-8">Join our waitlist and get early access when we launch!</p>
+                <a href="#" id="open-modal-cta" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold shadow-md hover:bg-gray-100 transition-colors inline-block">Join Waitlist</a>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Medit AI</h3>
+                <p>Revolutionizing medical writing with AI</p>
+            </div>
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+                    <!-- <li><a href="#" class="hover:text-white transition-colors">Login</a></li> -->
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+                <p>adigungodwin2@gmail.com</p>
+                <p>+2347047479891</p>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <p id="copyright">&copy; <span id="current-year"></span> Medit AI. All rights reserved.</p>
+        </div>
+        
+    </footer>
+
+    <div id="waitlist-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg max-w-md w-full relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" aria-label="Close modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-4">Join Our Waitlist</h2>
+            <p class="text-gray-600 mb-6">Be the first to know when Medit AI launches and get early access!</p>
+            <form id="waitlist-form" class="space-y-4" method="POST" action="{% url 'join_waitlist:join_waitlist' %}">
+                {% csrf_token %}
+                <div>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="Your Email"
+                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                        required
+                    >
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-500 transition-colors"
+                >
+                    <span class="loader hidden"></span>
+                    <span class="button-text">Join Waitlist</span>
+                </button>
+            </form>
+            
+            <!-- Add a div to show success or error messages -->
+            <div id="message" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuToggle = document.getElementById("menu-toggle");
+            const mobileNav = document.getElementById("mobile-nav");
+            const openModalButton = document.getElementById("open-modal");
+            const openModalCtaButton = document.getElementById("open-modal-cta");
+            const closeModalButton = document.getElementById("close-modal");
+            const modal = document.getElementById("waitlist-modal");
+            const waitlistForm = document.getElementById("waitlist-form");
+            const editedText = document.getElementById("edited-text");
+            const spellingComments = document.getElementById("spelling-comments");
+            const terminologyComments = document.getElementById("terminology-comments");
+            const submitButton = waitlistForm.querySelector("button[type='submit']");
+            const loader = submitButton.querySelector(".loader");
+            const buttonText = submitButton.querySelector(".button-text");
+
+            menuToggle.addEventListener("click", () => {
+                mobileNav.classList.toggle("hidden");
+            });
+
+            const openModal = () => {
+                modal.classList.remove("hidden");
+            };
+
+            openModalButton.addEventListener("click", openModal);
+            openModalCtaButton.addEventListener("click", openModal);
+
+            closeModalButton.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.classList.add("hidden");
+                }
+            });
+
+            waitlistForm.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                
+                // Show loader and disable button
+                loader.classList.remove("hidden");
+                buttonText.textContent = "Submitting...";
+                submitButton.disabled = true;
+
+                const formData = new FormData(waitlistForm);
+
+                try {
+                    const response = await fetch("/join-waitlist", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById("message").innerHTML = `<p class="text-green-600">${data.message}</p>`;
+                        waitlistForm.reset();
+                                    // Set a timeout to close the modal after 3 seconds
+                        setTimeout(() => {
+                            modal.classList.add("hidden");
+                            // Reset the message and form state
+                            document.getElementById("message").innerHTML = "";
+                            loader.classList.add("hidden");
+                            buttonText.textContent = "Join Waitlist";
+                            submitButton.disabled = false;
+                        }, 3000);
+                    } else {
+                        document.getElementById("message").innerHTML = `<p class="text-red-600">${data.message}</p>`;
+                    }
+                } catch (error) {
+                    document.getElementById("message").innerHTML = `<p class="text-red-600">There was an error submitting the form. Please try again later.</p>`;
+                } finally {
+                    // Hide loader and enable button
+                    loader.classList.add("hidden");
+                    buttonText.textContent = "Join Waitlist";
+                    submitButton.disabled = false;
+                }
+            });
+
+            // Close mobile nav when clicking outside
+            document.addEventListener("click", (e) => {
+                if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target)) {
+                    mobileNav.classList.add("hidden");
+                }
+            });
+
+            // Close mobile nav when clicking a link
+            mobileNav.querySelectorAll("a").forEach(link => {
+                link.addEventListener("click", () => {
+                    mobileNav.classList.add("hidden");
+                });
+            });
+
+            document.querySelectorAll('.waitlist-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                });
+            });
+
+            // Add click event listeners to highlighted words
+            editedText.querySelectorAll(".highlight").forEach(span => {
+                span.addEventListener("click", () => {
+                    const original = span.dataset.original;
+                    const suggestion = span.dataset.suggestion;
+                    span.outerHTML = suggestion;
+
+                    // Add inline comment
+                    const li = document.createElement("li");
+                    li.innerHTML = `<span class="font-medium">${original}:</span> Changed to "${suggestion}"`;
+
+                    // Categorize the comment
+                    if (["eficacy", "bacteriocidal", "trail", "recieved", "erradication", "safty"].includes(original)) {
+                        spellingComments.appendChild(li);
+                    } else {
+                        terminologyComments.appendChild(li);
+                    }
+
+                    // Add explanation for the change
+                    let explanation = "";
+                    switch(original) {
+                        case "eficacy":
+                            explanation = "Corrected spelling of 'efficacy', a crucial term in medical research referring to the ability to produce a desired effect.";
+                            break;
+                        case "MRSA":
+                            explanation = "Replaced 'MRSA' with 'Methicillin-Resistant Staphylococcus aureus.' This term refers to a type of bacteria known for its resistance to many commonly used antibiotics, including methicillin, penicillin, and amoxicillin.";
+                            break;
+                        case "bacteriocidal":
+                            explanation = "Fixed to 'bactericidal', the correct term for describing an agent capable of killing bacteria.";
+                            break;
+                        case "in vitro":
+                        case "in vivo":
+                            explanation = `Italicized "${suggestion}" as it is a Latin term commonly used in scientific writing.`;
+                            break;
+                        case "nosocomial":
+                            explanation = "Highlighted 'nosocomial' as it's a specific medical term referring to hospital-acquired infections.";
+                            break;
+                        case "trail":
+                            explanation = "Corrected 'trail' to 'trial', the proper term for a scientific study or experiment.";
+                            break;
+                        case "recieved":
+                            explanation = "Fixed common spelling error: 'received' is the correct spelling.";
+                            break;
+                        case "erradication":
+                            explanation = "Corrected to 'eradication', meaning the complete removal or destruction of something.";
+                            break;
+                        case "Pharmacokinetic":
+                            explanation = "Replaced 'PK' with 'Pharmacokinetics,' a medical term that describes the movement of drugs through the body, including processes like absorption, distribution, metabolism, and excretion.";
+                            break;
+                        case "Adverse affects":
+                            explanation = "Changed to 'Adverse effects', the correct term for describing negative outcomes or side effects in medical contexts.";
+                            break;
+                        case "This data suggests":
+                            explanation = "Updated to 'These data suggest' for grammatical correctness. 'Data' is plural in scientific writing.";
+                            break;
+                        case "safty":
+                            explanation = "Corrected spelling to 'safety', a critical concept in medical research and drug development.";
+                            break;
+                    }
+                    if (explanation) {
+                        const explanationLi = document.createElement("span");
+                        explanationLi.innerHTML = `<span class="font-medium mb-4">Explanation:</span> ${explanation}`;
+                        if (["eficacy", "bacteriocidal", "trail", "recieved", "erradication", "safty"].includes(original)) {
+                            spellingComments.appendChild(explanationLi);
+                        } else {
+                            terminologyComments.appendChild(explanationLi);
+                        }
+                    }
+                });
+            });
+        });
+
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    
+</body>
+</html>
+
