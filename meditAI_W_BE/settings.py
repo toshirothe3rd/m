@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'meditai-waitlist.netlify.app',
+    'meditai.railway.internal',
     'localhost',
     '127.0.0.1',
 ]
@@ -49,13 +49,13 @@ if DEBUG:
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
-        'https://meditai-waitlist.netlify.app'
+        'https://meditai.railway.internal'
     ]
     CSRF_TRUSTED_ORIGINS = [
-        'https://meditai-waitlist.netlify.app'
+        'https://meditai.railway.internalp'
     ]
     CORS_ORIGIN_WHITELIST = [
-        'https://meditai-waitlist.netlify.app'
+        'https://meditai.railway.internal'
     ]
 
 
