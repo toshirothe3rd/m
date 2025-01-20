@@ -74,6 +74,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -117,6 +118,16 @@ if DEBUG:
 else:
     DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DB_PUBLIC_URL'), conn_max_age=600)
+}
+
+
+# Static file serving.
+# https://whitenoise.readthedocs.io/en/stable/django.html#add-compression-and-caching-support
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
 
