@@ -150,6 +150,18 @@
         .hidden {
             display: none;
         }
+        #comments-section {
+            transition: opacity 0.3s ease;
+        }
+        /* .hidden {
+            opacity: 0;
+            visibility: hidden;
+        } */
+        :not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+        }
+
     </style>
 </head>
 
@@ -329,10 +341,10 @@
                         <h3 class="text-xl font-semibold mb-4">Comments</h3>
                         <div id="comments-list"></div>
                     </div>
-                    <div id="version-history" class="mt-8 hidden">
+                    <!-- <div id="version-history" class="mt-8 hidden">
                         <h3 class="text-xl font-semibold mb-4">Version History</h3>
                         <ul id="history-list" class="list-disc pl-5"></ul>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </section>
@@ -792,6 +804,10 @@
   toggleCommentsButton.addEventListener("click", () => {
     commentsSection.classList.toggle("hidden")
     toggleCommentsButton.textContent = commentsSection.classList.contains("hidden") ? "Show Comments" : "Hide Comments"
+    if (!commentsSection.classList.contains("hidden")) {
+        commentsSection.classList.remove('hidden');
+        commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   })
 //   showHistoryButton.addEventListener("click", () => {
 //     versionHistory.classList.toggle("hidden")
