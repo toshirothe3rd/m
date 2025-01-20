@@ -115,7 +115,7 @@
             overflow-y: auto;
         }
 
-        #history-list {
+        /* #history-list {
             scrollbar-width: thin;
             scrollbar-color: #cbd5e0 #edf2f7;
             list-style-type: none; 
@@ -137,7 +137,7 @@
         
         #history-list li { 
             margin-bottom: 10px; 
-        }
+        } */
 
         .actions { 
             display: inline-block; margin-left: 10px; 
@@ -628,7 +628,7 @@
   const commentsSection = document.getElementById("comments-section")
   const commentsList = document.getElementById("comments-list")
   const versionHistory = document.getElementById("version-history")
-  const historyList = document.getElementById("history-list")
+//   const historyList = document.getElementById("history-list")
   let showChanges = false
   let editMode = false
   let versionCount = 1
@@ -669,7 +669,7 @@
     }
 
     li.innerHTML = `<strong>Version ${versionCount}</strong> (${timestamp}): ${action}<br>${changeDetails}`
-    historyList.insertBefore(li, historyList.firstChild)
+    // historyList.insertBefore(li, historyList.firstChild)
     versionCount++
   }
 
@@ -760,19 +760,26 @@
     const changes = editedText.querySelectorAll(".change")
     changes.forEach((change) => {
       if (!change.querySelector(".actions")) {
-        const actions = document.createElement("div")
-        actions.className = "actions space-y-2 space-x-4"
-        const acceptButton = document.createElement("button")
-        acceptButton.textContent = "✓"
-        acceptButton.className = "text-green-500 mr-1"
-        acceptButton.addEventListener("click", () => acceptChange(change))
-        const rejectButton = document.createElement("button")
-        rejectButton.textContent = "✗"
-        rejectButton.className = "text-red-500"
-        rejectButton.addEventListener("click", () => rejectChange(change))
-        actions.appendChild(acceptButton)
-        actions.appendChild(rejectButton)
-        change.appendChild(actions)
+        const actions = document.createElement("div");
+// Using grid with fixed columns ensures consistent layout
+actions.className = "actions grid grid-cols-2 gap-2 w-fit";
+
+const acceptButton = document.createElement("button");
+acceptButton.textContent = "✓";
+// Remove margin since we're using grid gap
+acceptButton.className = "text-green-500 px-2 py-1";
+acceptButton.addEventListener("click", () => acceptChange(change));
+
+const rejectButton = document.createElement("button");
+rejectButton.textContent = "✗";
+// Remove border-l since we're using grid gap
+rejectButton.className = "text-red-500 px-2 py-1";
+rejectButton.addEventListener("click", () => rejectChange(change));
+
+actions.appendChild(acceptButton);
+actions.appendChild(rejectButton);
+change.appendChild(actions);
+
       }
     })
   }
