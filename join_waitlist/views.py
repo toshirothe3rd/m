@@ -98,7 +98,7 @@ def join_waitlist(request):
                                                             <td align="center" style="padding: 30px 0 0 0;" class="padding">
                                                                 <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
                                                                     <tr>
-                                                                        <td align="center" style="border-radius: 8px;" bgcolor="#19469D"><a href="https://meditai.netlify.app" target="_blank" style="font-size: 16px; font-family: 'Inter', Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 15px 25px; border: 1px solid #19469D; display: inline-block;" class="mobile-button">Visit Our Website</a></td>
+                                                                        <td align="center" style="border-radius: 8px;" bgcolor="#19469D"><a href="https://meditai.up.railway.app/join-waitlist" target="_blank" style="font-size: 16px; font-family: 'Inter', Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 15px 25px; border: 1px solid #19469D; display: inline-block;" class="mobile-button">Visit Our Website</a></td>
                                                                     </tr>
                                                                 </table>
                                                             </td>

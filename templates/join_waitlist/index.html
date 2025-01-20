@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body, html {
+        body,
+        html {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             height: 100%;
             margin: 0;
         }
+
         .highlight {
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
         }
+
         .highlight:hover {
             font-weight: bold;
         }
+
         .highlight::after {
             content: attr(data-comment);
             position: absolute;
@@ -37,9 +42,11 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
+
         .highlight:hover::after {
             opacity: 1;
         }
+
         .loader {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #3498db;
@@ -51,12 +58,101 @@
             vertical-align: middle;
             margin-right: 10px;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .deletion {
+            text-decoration: line-through;
+            color: red;
+            display: none;
+        }
+
+        .addition {
+            text-decoration: underline;
+            color: blue;
+            display: none;
+        }
+
+        .show-changes .deletion,
+        .show-changes .addition {
+            display: inline;
+        }
+
+        .change {
+            position: relative;
+            /* background-color: #ffff99;  */
+        }
+
+        .change .actions {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px;
+            display: none;
+        }
+
+        .show-changes .change:hover .actions {
+            display: block;
+        }
+
+        .comment-highlight {
+            background-color: yellow;
+        }
+
+        #version-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #history-list {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 #edf2f7;
+            list-style-type: none; 
+            padding: 0;
+        }
+
+        #history-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #history-list::-webkit-scrollbar-track {
+            background: #edf2f7;
+        }
+
+        #history-list::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 4px;
+        }
+        
+        #history-list li { 
+            margin-bottom: 10px; 
+        }
+
+        .actions { 
+            display: inline-block; margin-left: 10px; 
+        }
+
+        .comment-area { 
+            width: 100%; margin-top: 5px; 
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800">
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4">
@@ -72,8 +168,10 @@
                 <div class="flex space-x-4 items-center">
                     <!-- <button class="hidden md:block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 transition-colors">Login</button> -->
                     <button id="menu-toggle" class="md:hidden focus:outline-none" aria-label="Toggle menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
@@ -94,10 +192,13 @@
     <main>
         <section id="hero" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-20">
             <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">Revolutionize Your <span class="underline decoration-white">Medical Writing</span></h1>
-                <p class="text-lg md:text-xl mb-6">AI-powered editing and analysis for medical articles and research papers</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Revolutionize Your <span
+                        class="underline decoration-white">Medical Writing</span></h1>
+                <p class="text-lg md:text-xl mb-6">AI-powered editing and analysis for medical articles and research
+                    papers</p>
                 <div class="flex justify-center space-x-4">
-                    <button id="open-modal" class="bg-white text-blue-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
+                    <button id="open-modal"
+                        class="bg-white text-blue-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
                         Join Waitlist
                     </button>
                 </div>
@@ -109,30 +210,42 @@
                 <h2 class="text-3xl font-bold text-center mb-12">Key Features</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <h3 class="text-xl font-semibold mb-2">Grammar Correction</h3>
                         <p class="text-gray-600">Advanced AI algorithms to fix grammatical errors</p>
                     </div>
                     <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
+                            </path>
                         </svg>
                         <h3 class="text-xl font-semibold mb-2">Context-Aware Edits</h3>
                         <p class="text-gray-600">Identify and replace unsuitable words in medical context</p>
                     </div>
                     <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
+                            </path>
                         </svg>
                         <h3 class="text-xl font-semibold mb-2">Inline Comments</h3>
                         <p class="text-gray-600">Detailed explanations for suggested changes</p>
                     </div>
                     <div class="text-center p-6 bg-gray-50 rounded-lg shadow-md transition-transform hover:scale-105">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                            </path>
                         </svg>
                         <h3 class="text-xl font-semibold mb-2">Highlighted Edits</h3>
                         <p class="text-gray-600">Easily identify and review all changes made</p>
@@ -146,109 +259,83 @@
                 <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="text-center">
-                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">1</div>
+                        <div
+                            class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">
+                            1</div>
                         <h3 class="text-xl font-semibold mb-2">Upload Your Article</h3>
                         <p class="text-gray-600">Submit your medical article or research paper for analysis.</p>
                     </div>
                     <div class="text-center">
-                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">2</div>
+                        <div
+                            class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">
+                            2</div>
                         <h3 class="text-xl font-semibold mb-2">AI Analysis</h3>
                         <p class="text-gray-600">Our AI processes your document, identifying areas for improvement.</p>
                     </div>
                     <div class="text-center">
-                        <div class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">3</div>
+                        <div
+                            class="bg-blue-600 text-white w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-4 text-2xl font-bold">
+                            3</div>
                         <h3 class="text-xl font-semibold mb-2">Review and Apply Changes</h3>
-                        <p class="text-gray-600">Review AI-suggested edits and comments, then apply or modify as needed.</p>
+                        <p class="text-gray-600">Review AI-suggested edits, apply/modify as needed, and comments will be automatically inserted in the correct positions in the document
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="demo" class="py-20 bg-white">
-    <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center mb-6">See Medit AI in Action</h2>
-        <p class="text-center text-gray-600 mb-12">Experience the power of AI-driven editing that can elevate your medical research to publication standards. Our platform catches errors that even experienced researchers might miss, ensuring your work is polished and precise.</p>
-        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p class="text-gray-600 mb-4 text-center">Click on highlighted words to see and apply suggestions. Hover over highlighted words for quick comments.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                <div>
-                    <h3 class="text-xl font-semibold mb-4 text-center">Original Text</h3>
-                    <div id="original-text" class="bg-white p-4 rounded border border-gray-300 mb-4">
-                        <p>In this study, we investigated the eficacy of a novel antibiotic compound, XYZ-123, in treating MRSA infections. The compound demonstrated significant bacteriocidal activity against MRSA strains in vitro and in vivo. A cohort of 150 patients with nosocomial MRSA infections were enrolled in a double-blind, randomized controlled trail. Patients recieved either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete erradication of infection, compared to only 78% in the vancomycin group (p<0.001). PK analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. Adverse affects were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. This data suggests that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term safty and efficacy of XYZ-123 in diverse patient populations.</p>
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-6">See Medit AI in Action</h2>
+                <p class="text-center text-gray-600 mb-12">Experience the power of AI-driven editing that can elevate your medical research to publication standards. Our platform catches errors that even experienced researchers might miss, ensuring your work is polished and precise.</p>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <!-- <button id="toggle-changes" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors mr-2">
+                                Show Changes
+                            </button> -->
+                            <button id="accept-all" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors mr-2">
+                                Accept All
+                            </button>
+                            <button id="reject-all" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors mr-2">
+                                Reject All
+                            </button>
+                            <button id="toggle-comments" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors mr-2">
+                                Show Comments
+                            </button>
+                            <!-- <button id="show-history" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
+                                Show History
+                            </button> -->
+                        </div>
+                        <!-- <button id="toggle-edit-mode" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
+                            Enable Edit Mode
+                        </button> -->
                     </div>
-                </div>
-                <div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-center">
-                            Edited Text
-                        </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4 text-center">Original Text</h3>
+                            <div id="original-text" class="bg-white p-4 rounded border border-gray-300 mb-4">
+                                <p>In this study, we investigated the eficacy of a novel antibiotic compound, XYZ-123, in treating MRSA infections. The compound demonstrated significant bacteriocidal activity against MRSA strains in vitro and in vivo. A cohort of 150 patients with nosocomial MRSA infections were enrolled in a double-blind, randomized controlled trail. Patients recieved either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete erradication of infection, compared to only 78% in the vancomycin group (p<0.001). PK analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. Adverse affects were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. This data suggests that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term safty and efficacy of XYZ-123 in diverse patient populations.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4 text-center">Edited Text</h3>
+                            <div id="edited-text" class="bg-white p-4 rounded border border-gray-300 mb-4" contenteditable="false">
+                                <p>In this study, we investigated the <span class="change" data-id="1"><span class="deletion">eficacy</span><span class="addition">efficacy</span></span> of a novel antibiotic compound, XYZ-123, in treating <span class="change" data-id="2"><span class="deletion">MRSA</span><span class="addition">Methicillin-Resistant Staphylococcus aureus (MRSA)</span></span> infections. The compound demonstrated significant <span class="change" data-id="3"><span class="deletion">bacteriocidal</span><span class="addition">bactericidal</span></span> activity against MRSA strains <span class="change" data-id="4"><span class="deletion">in vitro</span><span class="addition"><i>in vitro</i></span></span> and <span class="change" data-id="5"><span class="deletion">in vivo</span><span class="addition"><i>in vivo</i></span></span>. A cohort of 150 patients with nosocomial MRSA infections were enrolled in a double-blind, randomized controlled <span class="change" data-id="6"><span class="deletion">trail</span><span class="addition">trial</span></span>. Patients <span class="change" data-id="7"><span class="deletion">recieved</span><span class="addition">received</span></span> either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete <span class="change" data-id="8"><span class="deletion">erradication</span><span class="addition">eradication</span></span> of infection, compared to only 78% in the vancomycin group (p&lt;0.001). <span class="change" data-id="9"><span class="deletion">PK</span><span class="addition">Pharmacokinetic (PK)</span></span> analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. <span class="change" data-id="10"><span class="deletion">Adverse affects</span><span class="addition">Adverse effects</span></span> were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. <span class="change" data-id="11"><span class="deletion">This data suggests</span><span class="addition">These data suggest</span></span> that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term <span class="change" data-id="12"><span class="deletion">safty</span><span class="addition">safety</span></span> and efficacy of XYZ-123 in diverse patient populations.</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div id="edited-text" class="bg-white p-4 rounded border border-gray-300 mb-4">
-                        <p>In this study, we investigated the <span class="highlight bg-red-200" data-original="eficacy" data-suggestion="efficacy" data-comment="Spelling: 'efficacy' is the correct term">eficacy</span> of a novel antibiotic compound, XYZ-123, in treating <span class="highlight bg-yellow-200" data-original="MRSA" data-suggestion="Methicillin-Resistant Staphylococcus aureus" data-comment="Terminology: The full meaning of MRSA in this context is Methicillin-Resistant Staphylococcus aureus.">MRSA</span> infections. The compound demonstrated significant <span class="highlight bg-red-200" data-original="bacteriocidal" data-suggestion="bactericidal" data-comment="Spelling: 'bactericidal' is the correct term">bacteriocidal</span> activity against MRSA strains <span class="highlight bg-yellow-200" data-original="in vitro" data-suggestion="<i>in vitro</i>" data-comment="Formatting: Italicize Latin term">in vitro</span> and <span class="highlight bg-yellow-200" data-original="in vivo" data-suggestion="<i>in vivo</i>" data-comment="Formatting: Italicize Latin term">in vivo</span>. A cohort of 150 patients with <span> nosocomial MRSA infections were enrolled in a double-blind, randomized controlled <span class="highlight bg-red-200" data-original="trail" data-suggestion="trial" data-comment="Spelling: 'trial' is the correct term for a study">trail</span>. Patients <span class="highlight bg-red-200" data-original="recieved" data-suggestion="received" data-comment="Spelling: 'received' is the correct spelling">recieved</span> either XYZ-123 or vancomycin (the current gold standard) for 14 days. Results showed that 92% of patients in the XYZ-123 group achieved complete <span class="highlight bg-red-200" data-original="erradication" data-suggestion="eradication" data-comment="Spelling: 'eradication' is the correct spelling">erradication</span> of infection, compared to only 78% in the vancomycin group (p&lt;0.001). <span class="highlight bg-yellow-200" data-original="Pharmacokinetic" data-suggestion="Pharmacokinetic" data-comment="Terminology: The full meaning of PK in this context is Pharmacokinetic">PK</span> analysis revealed that XYZ-123 had a longer half-life and better tissue penetration than vancomycin. <span class="highlight bg-red-200" data-original="Adverse affects" data-suggestion="Adverse effects" data-comment="Terminology: 'effects' is correct in medical context">Adverse affects</span> were minimal, with only 3% of patients reporting mild gastrointestinal discomfort. <span class="highlight bg-yellow-200" data-original="This data suggests" data-suggestion="These data suggest" data-comment="Grammar: 'Data' is plural in scientific writing">This data suggests</span> that XYZ-123 may be a superior alternative to vancomycin for treating MRSA infections, particularly in cases of vancomycin-resistant strains. Further studies are needed to assess the long-term <span class="highlight bg-red-200" data-original="safty" data-suggestion="safety" data-comment="Spelling: 'safety' is the correct spelling">safty</span> and efficacy of XYZ-123 in diverse patient populations.</p>
+                    <div id="comments-section" class="mt-8 hidden">
+                        <h3 class="text-xl font-semibold mb-4">Comments</h3>
+                        <div id="comments-list"></div>
+                    </div>
+                    <div id="version-history" class="mt-8 hidden">
+                        <h3 class="text-xl font-semibold mb-4">Version History</h3>
+                        <ul id="history-list" class="list-disc pl-5"></ul>
                     </div>
                 </div>
             </div>
-            <div class="mt-16">
-                <h2 class="text-xl font-semibold mb-6 text-center underline">Inline Comments</h2>
-                <div id="inline-comments" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h4 class="font-semibold mb-2">Spelling Corrections:</h4>
-                        <ul class="list-disc pl-5 space-y-2" id="spelling-comments"></ul>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold mb-2">Terminology and Formatting:</h4>
-                        <ul class="list-disc pl-5 space-y-2" id="terminology-comments"></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-11">
-                <h3 class="text-xl font-semibold mb-4">AI-Suggested Improvements:</h3>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li>Correct spelling errors in medical terminology (e.g., "bacteriocidal" to "bactericidal", "erradication" to "eradication")</li>
-                    <li>Fix general vocabulary and grammar mistakes (e.g., "eficacy" to "efficacy", "recieved" to "received")</li>
-                    <li>Ensure proper formatting of scientific terms (e.g., italicization of "in vitro" and "in vivo")</li>
-                    <li>Improve clarity and precision in reporting research findings (e.g., "This data suggests" to "These data suggest")</li>
-                    <li>Correct usage of medical terms (e.g., "Adverse affects" to "Adverse effects")</li>
-                    <li>Enhance consistency in terminology throughout the text</li>
-                    <li>Provides the full meanings of medical abbreviations, such as PK for Pharmacokinetics, ensuring clear understanding and context.</li>
-                    <li>Recommend additional statistical information for stronger evidence (e.g., confidence intervals)</li>
-                    <li>Propose structural improvements for better flow and readability</li>
-                    <li>Flag potential areas for expanded discussion or clarification</li>
-                </ul>
-            </div>
-        </div>
-        <div class="mt-12 bg-blue-50 p-6 rounded-lg shadow-md">
-            <h3 class="text-2xl font-semibold mb-4 text-center text-blue-800">Why Medit AI is Essential for Your Research</h3>
-            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-900">
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Catches subtle errors that can impact your paper's credibility</span>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Ensures consistency in medical terminology, abbreviations and phrasing</span>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Improves the overall quality and readability of your research</span>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Saves time in the editing process, allowing you to focus on your research</span>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Increases the likelihood of acceptance in top-tier medical journals</span>
-                </li>
-                <li class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Provides educational feedback to improve your medical writing skills</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
+        </section>
 
         <section id="pricing" class="py-20 bg-gray-100">
             <div class="container mx-auto px-6">
@@ -266,7 +353,9 @@
                             <li>Inline comments and suggestions</li>
                             <li>Customizable terminology database</li>
                         </ul>
-                        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition-colors inline-block waitlist-button">Join Waitlist</a>
+                        <a href="#"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition-colors inline-block waitlist-button">Join
+                            Waitlist</a>
                     </div>
                 </div>
             </div>
@@ -276,7 +365,9 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-4xl font-bold mb-4">Be the First to Experience Medit AI</h2>
                 <p class="text-xl mb-8">Join our waitlist and get early access when we launch!</p>
-                <a href="#" id="open-modal-cta" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold shadow-md hover:bg-gray-100 transition-colors inline-block">Join Waitlist</a>
+                <a href="#" id="open-modal-cta"
+                    class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold shadow-md hover:bg-gray-100 transition-colors inline-block">Join
+                    Waitlist</a>
             </div>
         </section>
     </main>
@@ -304,14 +395,17 @@
         <div class="text-center mt-8">
             <p id="copyright">&copy; <span id="current-year"></span> Medit AI. All rights reserved.</p>
         </div>
-        
+
     </footer>
 
     <div id="waitlist-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg max-w-md w-full relative">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" aria-label="Close modal">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                aria-label="Close modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
                 </svg>
             </button>
             <h2 class="text-2xl font-bold mb-4">Join Our Waitlist</h2>
@@ -319,24 +413,17 @@
             <form id="waitlist-form" class="space-y-4" method="POST" action="{% url 'join_waitlist:join_waitlist' %}">
                 {% csrf_token %}
                 <div>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="Your Email"
+                    <input type="email" name="email" id="email" placeholder="Your Email"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                        required
-                    >
+                        required>
                 </div>
-                <button
-                    type="submit"
-                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-500 transition-colors"
-                >
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-500 transition-colors">
                     <span class="loader hidden"></span>
                     <span class="button-text">Join Waitlist</span>
                 </button>
             </form>
-            
+
             <!-- Add a div to show success or error messages -->
             <div id="message" class="mt-4"></div>
         </div>
@@ -381,7 +468,7 @@
 
             waitlistForm.addEventListener("submit", async function (e) {
                 e.preventDefault();
-                
+
                 // Show loader and disable button
                 loader.classList.remove("hidden");
                 buttonText.textContent = "Submitting...";
@@ -400,7 +487,7 @@
                     if (response.ok) {
                         document.getElementById("message").innerHTML = `<p class="text-green-600">${data.message}</p>`;
                         waitlistForm.reset();
-                                    // Set a timeout to close the modal after 3 seconds
+                        // Set a timeout to close the modal after 3 seconds
                         setTimeout(() => {
                             modal.classList.add("hidden");
                             // Reset the message and form state
@@ -463,7 +550,7 @@
 
                     // Add explanation for the change
                     let explanation = "";
-                    switch(original) {
+                    switch (original) {
                         case "eficacy":
                             explanation = "Corrected spelling of 'efficacy', a crucial term in medical research referring to the ability to produce a desired effect.";
                             break;
@@ -517,7 +604,226 @@
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
-    
-</body>
-</html>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+  const editedText = document.getElementById("edited-text")
+  const toggleChangesButton = document.getElementById("toggle-changes")
+  const acceptAllButton = document.getElementById("accept-all")
+  const rejectAllButton = document.getElementById("reject-all")
+  const toggleCommentsButton = document.getElementById("toggle-comments")
+  const showHistoryButton = document.getElementById("show-history")
+  const toggleEditModeButton = document.getElementById("toggle-edit-mode")
+  const commentsSection = document.getElementById("comments-section")
+  const commentsList = document.getElementById("comments-list")
+  const versionHistory = document.getElementById("version-history")
+  const historyList = document.getElementById("history-list")
+  let showChanges = false
+  let editMode = false
+  let versionCount = 1
 
+  function generateComment(changeType, oldValue, newValue, isRejected = false) {
+    if (isRejected) {
+      return `Rejected change from "${oldValue}" to "${newValue}". The original text was deemed more appropriate in this context.`
+    }
+    switch (changeType) {
+      case "italicize":
+        return `Italicized "${oldValue}". Latin terms like "${oldValue}" should be italicized in scientific writing for clarity and adherence to convention.`
+      case "spelling":
+        return `Corrected spelling from "${oldValue}" to "${newValue}". "${newValue}" is the correct spelling in medical context.`
+      case "terminology":
+        return `Changed "${oldValue}" to "${newValue}". "${oldValue}" is not appropriate in medical context. "${newValue}" provides grammatical precision and clarity in medical writing.`
+      case "abbreviation":
+        return `Expanded the abbreviation "${oldValue}" to "${newValue}". Providing the full term alongside its abbreviation enhances clarity and ensures all readers understand the terminology.`
+      default:
+        return `Changed "${oldValue}" to "${newValue}". Improved accuracy and clarity in medical context.`
+    }
+  }
+
+  function updateVersionHistory(action, details) {
+    const li = document.createElement("li")
+    const timestamp = new Date().toLocaleString()
+    let changeDetails = ""
+
+    if (details) {
+      if (details.changeType) {
+        changeDetails = generateComment(details.changeType, details.oldValue, details.newValue, details.isRejected)
+      } else if (details.added) {
+        changeDetails = `Added "${details.added}"`
+      } else if (details.removed) {
+        changeDetails = `Removed "${details.removed}"`
+      } else if (details.commentEdited) {
+        changeDetails = `Edited comment: ${details.commentEdited}`
+      }
+    }
+
+    li.innerHTML = `<strong>Version ${versionCount}</strong> (${timestamp}): ${action}<br>${changeDetails}`
+    historyList.insertBefore(li, historyList.firstChild)
+    versionCount++
+  }
+
+  function determineChangeType(oldValue, newValue) {
+    if (oldValue.toLowerCase() === newValue.toLowerCase() && newValue.startsWith("<i>")) {
+      return "italicize"
+    } else if (oldValue.toLowerCase() !== newValue.toLowerCase()) {
+      if (oldValue.length === newValue.length) {
+        return "spelling"
+      } else if (newValue.includes(oldValue) || oldValue.includes(newValue)) {
+        return "abbreviation"
+      } else {
+        return "terminology"
+      }
+    }
+    return "default"
+  }
+
+//   function toggleChangesVisibility() {
+    showChanges = !showChanges
+    editedText.classList.toggle("show-changes", showChanges)
+    // toggleChangesButton.textContent = showChanges ? "Hide Changes" : "Show Changes"
+//   }
+
+  function acceptAllChanges() {
+    const changes = editedText.querySelectorAll(".change")
+    changes.forEach((change) => acceptChange(change))
+    updateVersionHistory("Accepted all changes")
+  }
+
+  function rejectAllChanges() {
+    const changes = editedText.querySelectorAll(".change")
+    changes.forEach((change) => rejectChange(change))
+    updateVersionHistory("Rejected all changes")
+  }
+
+  function acceptChange(change) {
+    const addition = change.querySelector(".addition")
+    const deletion = change.querySelector(".deletion")
+    if (addition && deletion) {
+      const oldValue = deletion.textContent
+      const newValue = addition.textContent
+      const changeType = determineChangeType(oldValue, newValue)
+      change.replaceWith(addition.textContent)
+      updateVersionHistory("Accepted change", { changeType, oldValue, newValue })
+      updateComments(change.dataset.id, generateComment(changeType, oldValue, newValue))
+    } else {
+      change.remove()
+      updateVersionHistory("Removed change", { removed: change.textContent })
+    }
+  }
+
+  function rejectChange(change) {
+    const addition = change.querySelector(".addition")
+    const deletion = change.querySelector(".deletion")
+    if (addition && deletion) {
+      const oldValue = deletion.textContent
+      const newValue = addition.textContent
+      const changeType = determineChangeType(oldValue, newValue)
+      change.replaceWith(deletion.textContent)
+      updateVersionHistory("Rejected change", { changeType, oldValue, newValue, isRejected: true })
+      updateComments(change.dataset.id, generateComment(changeType, oldValue, newValue, true))
+    } else {
+      change.remove()
+      updateVersionHistory("Removed change", { removed: change.textContent })
+    }
+  }
+
+  function updateComments(changeId, comment) {
+    let commentElement = document.getElementById(`comment-${changeId}`)
+    if (!commentElement) {
+      commentElement = document.createElement("div")
+      commentElement.id = `comment-${changeId}`
+      commentElement.className = "mb-4"
+      commentsList.appendChild(commentElement)
+    }
+    commentElement.innerHTML = `
+            <p class="mb-2">Suggestion ${changeId}:</p>
+            <textarea class="comment-area" rows="1">${comment}</textarea>
+        `
+    const textarea = commentElement.querySelector("textarea")
+    textarea.addEventListener("change", () => {
+      updateVersionHistory("Edited comment", { commentEdited: textarea.value })
+    })
+  }
+
+  function addChangeActions() {
+    const changes = editedText.querySelectorAll(".change")
+    changes.forEach((change) => {
+      if (!change.querySelector(".actions")) {
+        const actions = document.createElement("div")
+        actions.className = "actions"
+        const acceptButton = document.createElement("button")
+        acceptButton.textContent = "✓"
+        acceptButton.className = "text-green-500 mr-1"
+        acceptButton.addEventListener("click", () => acceptChange(change))
+        const rejectButton = document.createElement("button")
+        rejectButton.textContent = "✗"
+        rejectButton.className = "text-red-500"
+        rejectButton.addEventListener("click", () => rejectChange(change))
+        actions.appendChild(acceptButton)
+        actions.appendChild(rejectButton)
+        change.appendChild(actions)
+      }
+    })
+  }
+
+  function trackChanges(mutations) {
+    mutations.forEach((mutation) => {
+      if (mutation.type === "characterData") {
+        const target = mutation.target.parentNode
+        if (target.classList.contains("addition") || target.classList.contains("deletion")) {
+          return
+        }
+        const oldValue = mutation.oldValue
+        const newValue = mutation.target.textContent
+        const changeType = determineChangeType(oldValue, newValue)
+        const change = document.createElement("span")
+        change.className = "change"
+        change.innerHTML = `<span class="deletion">${oldValue}</span><span class="addition">${newValue}</span>`
+        mutation.target.replaceWith(change)
+        addChangeActions()
+        updateVersionHistory("Made a change", { changeType, oldValue, newValue })
+        updateComments(change.dataset.id, generateComment(changeType, oldValue, newValue))
+      }
+    })
+  }
+
+//   toggleChangesButton.addEventListener("click", toggleChangesVisibility)
+  acceptAllButton.addEventListener("click", acceptAllChanges)
+  rejectAllButton.addEventListener("click", rejectAllChanges)
+  toggleCommentsButton.addEventListener("click", () => {
+    commentsSection.classList.toggle("hidden")
+    toggleCommentsButton.textContent = commentsSection.classList.contains("hidden") ? "Show Comments" : "Hide Comments"
+  })
+//   showHistoryButton.addEventListener("click", () => {
+//     versionHistory.classList.toggle("hidden")
+//     showHistoryButton.textContent = versionHistory.classList.contains("hidden") ? "Show History" : "Hide History"
+//   })
+//   toggleEditModeButton.addEventListener("click", () => {
+//     editMode = !editMode
+//     editedText.contentEditable = editMode
+//     editedText.classList.toggle("border-purple-500", editMode)
+//     editedText.classList.toggle("shadow-lg", editMode)
+//     toggleEditModeButton.textContent = editMode ? "Disable Edit Mode" : "Enable Edit Mode"
+//     toggleEditModeButton.classList.toggle("bg-red-500", editMode)
+//     toggleEditModeButton.classList.toggle("bg-purple-500", !editMode)
+//   })
+
+  addChangeActions()
+
+  const observer = new MutationObserver(trackChanges)
+  observer.observe(editedText, { characterData: true, subtree: true, characterDataOldValue: true })
+
+  // Initialize comments for existing changes
+  const initialChanges = editedText.querySelectorAll(".change")
+  initialChanges.forEach((change) => {
+    const oldValue = change.querySelector(".deletion").textContent
+    const newValue = change.querySelector(".addition").textContent
+    const changeType = determineChangeType(oldValue, newValue)
+    updateComments(change.dataset.id, generateComment(changeType, oldValue, newValue))
+  })
+})
+
+
+        </script>
+</body>
+
+</html>
