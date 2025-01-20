@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn meditAI_W_BE.wsgi
+web: python manage.py migrate && python manage.py collectstatic --no-input && gunicorn meditAI_W_BE.wsgi
